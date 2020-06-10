@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Product;
+use App\Repositories\Category\CategoryRepositoryInterface;
+use App\Repositories\Product\ProductRepositoryInterface;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class ProductController extends Controller
 {
@@ -12,9 +15,17 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    private $_productRepository;
+    private $_categoryRepository;
+    public function __construct(ProductRepositoryInterface $productRepository, CategoryRepositoryInterface $categoryRepository)
+    {
+        $this->_categoryRepository = $categoryRepository;
+        $this->_productRepository = $productRepository;
+    }
+
     public function index()
     {
-        //
+            return response()->json($this->_productRepository->getProducts());
     }
 
     /**
@@ -35,7 +46,35 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try{
+            if ($request->hasFile('photo')){
+                $file = $request->file('photo');
+                $file_format = $file->getClientOriginalExtension();
+                if ($file_format != "jpg" && $file_format != "png" && $file_format != "jpeg"){
+                    return  response()->json(['content'=>'Format File Not Accept',"error"=>true],400);
+                }
+                $name=str_random(4)."_".$file->getClientOriginalName();
+                $file->move("upload/product",$name);
+
+            }   else {
+                return  response()->json(['content'=>'Please Choose File',"error"=>true],400);
+            }
+            $data = $request->only('name','description','information','amount','price','discount','information','category_id','producer_id','status_id')+['photo' => $name];
+            $product =   $this->_productRepository->create($data);
+            $result = array(
+                'status' => 'OK',
+                'message'=> 'Insert Successfully',
+                'data'=> $product
+            );
+            return response()->json($result,Response::HTTP_CREATED,[],JSON_NUMERIC_CHECK);
+        }catch (Exception $e){
+            $result = array(
+                'status' => 'ER',
+                'message'=> 'Insert Failed',
+                'data'=> ''
+            );
+            return response()->json($result,Response::HTTP_BAD_REQUEST,[],JSON_NUMERIC_CHECK);
+        }
     }
 
     /**
@@ -44,9 +83,20 @@ class ProductController extends Controller
      * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function show(Product $product)
+    public function show($id)
     {
-        //
+
+        $data_find = $this->_productRepository->find($id);
+        if (is_null($data_find)){
+            return response()->json("Record id not found",Response::HTTP_NOT_FOUND,[],JSON_NUMERIC_CHECK);
+        }
+
+        $result = array(
+            'status' => 'OK',
+            'message'=> 'Show Successfully',
+            'data'=> $this->_productRepository->showProductById($id)
+        );
+        return response()->json($result,Response::HTTP_OK,[],JSON_NUMERIC_CHECK);
     }
 
     /**
@@ -67,9 +117,37 @@ class ProductController extends Controller
      * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Product $product)
+    public function update(Request $request, $id)
     {
-        //
+        try{
+            if ($request->hasFile('photo')){
+                $file = $request->file('photo');
+                $file_format = $file->getClientOriginalExtension();
+                if ($file_format != "jpg" && $file_format != "png" && $file_format != "jpeg"){
+                    return  response()->json(['content'=>'Format File Not Accept',"error"=>true],400);
+                }
+                $name=str_random(4)."_".$file->getClientOriginalName();
+                $file->move("upload/product",$name);
+
+            }   else {
+                return  response()->json(['content'=>'Please Choose File',"error"=>true],400);
+            }
+            $data = $request->only('name','description','information','amount','price','discount','information','category_id','producer_id','status_id')+['photo' => $name];
+            $product =   $this->_productRepository->update($id,$data);
+            $result = array(
+                'status' => 'OK',
+                'message'=> 'Updated Successfully',
+                'data'=> $product
+            );
+            return response()->json($result,Response::HTTP_OK,[],JSON_NUMERIC_CHECK);
+        }catch (Exception $e){
+            $result = array(
+                'status' => 'ER',
+                'message'=> 'Updated Failed',
+                'data'=> ''
+            );
+            return response()->json($result,Response::HTTP_BAD_REQUEST,[],JSON_NUMERIC_CHECK);
+        }
     }
 
     /**
@@ -78,8 +156,38 @@ class ProductController extends Controller
      * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Product $product)
+    public function destroy($id)
     {
-        //
+        try {
+            $pr =  $this->_productRepository->delete($id);
+            $result = array(
+                'status' => 'OK',
+                'message'=> 'Delete Successfully',
+                'data'=> $pr
+            );
+            return response()->json($result,Response::HTTP_OK,[],JSON_NUMERIC_CHECK);
+        } catch (Exception $e) {
+            $result = array(
+                'status' => 'ER',
+                'message'=> 'Delete Failed',
+                'data'=> ''
+            );
+            return response()->json($result,Response::HTTP_BAD_REQUEST,[],JSON_NUMERIC_CHECK);
+        }
+    }
+
+    public function getProductByCategory(Request $request,$cat){
+        $data_find = $this->_categoryRepository->find($cat);
+        if (is_null($data_find)){
+            return response()->json("Record id not found",Response::HTTP_NOT_FOUND,[],JSON_NUMERIC_CHECK);
+        }
+
+
+        $result = array(
+            'status' => 'OK',
+            'message'=> 'Show Successfully',
+            'data'=> $this->_productRepository->getProductByCategory($cat)
+        );
+        return response()->json($result,Response::HTTP_OK,[],JSON_NUMERIC_CHECK);
     }
 }
