@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Repositories\OrderStatus\OrderStatusRepositoryInterface;
 use App\TransactionStatus;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class TransactionStatusController extends Controller
 {
@@ -12,9 +14,16 @@ class TransactionStatusController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    private $_orderStatusRepository;
+
+    public function __construct(OrderStatusRepositoryInterface $orderStatusRepository)
     {
-        //
+        $this->_orderStatusRepository = $orderStatusRepository;
+    }
+
+    public function index(){
+        $result = $this->_orderStatusRepository->getAll();
+        return response()->json($result,Response::HTTP_OK,[],JSON_NUMERIC_CHECK);
     }
 
     /**

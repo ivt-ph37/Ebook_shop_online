@@ -33,6 +33,29 @@ class BackendProvider extends ServiceProvider
             \App\Repositories\User\UserRepositoryInterface::class,
             \App\Repositories\User\UserEloquentRepository::class
         );
+        $this->app->bind(
+            \App\Repositories\Role\RoleRepositoryInterface::class,
+            \App\Repositories\Role\RoleEloquentRepository::class
+        );
+
+        $this->app->bind(
+            \App\Repositories\Review\ReviewRepositoryInterface::class,
+            \App\Repositories\Review\ReviewEloquentRepository::class
+        );
+
+        $this->app->bind(
+            \App\Repositories\Producer\ProducerRepositoryInterface::class,
+            \App\Repositories\Producer\ProducerEloquentRepository::class
+        );
+        $this->app->bind(
+            \App\Repositories\Address\AddressRepositoryInterface::class,
+            \App\Repositories\Address\AddressEloquentRepository::class
+        );
+
+        $this->app->bind(
+            \App\Repositories\OrderStatus\OrderStatusRepositoryInterface::class,
+            \App\Repositories\OrderStatus\OrderStatusEloquentRepository::class
+        );
     }
 
     /**

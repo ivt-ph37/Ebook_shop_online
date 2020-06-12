@@ -20,12 +20,15 @@ use Illuminate\Http\Request;
 
 Route::resource('categories','CategoryController');
 Route::resource('users','UserController');
+Route::resource('roles','RoleController');
 Route::resource('products','ProductController');
 Route::resource('orders','TransactionController');
 Route::get('categories/{cat}/products', 'ProductController@getProductByCategory');
 Route::get('users/{user_id}/orders', 'TransactionController@getOrderByUser');
-
-
+Route::resource('orderstatuses','TransactionStatusController');
+Route::resource('reviews','ReviewController');
+Route::resource('producers','ProducerController');
+Route::resource('addresses','AddressController');
 
 
 
