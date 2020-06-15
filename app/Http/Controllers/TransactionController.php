@@ -154,7 +154,7 @@ class TransactionController extends Controller
             if (is_null($data_find)){
                 return response()->json("Record is not found",Response::HTTP_NOT_FOUND,[],JSON_NUMERIC_CHECK);
             }
-            $this->_orderRepository->update($transaction_id,5);
+            $this->_orderRepository->update($transaction_id,['status_id' => 5]);
             $result = array(
                 'status' => 'OK',
                 'message'=> 'Update Successfully',

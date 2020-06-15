@@ -59,7 +59,7 @@ class ProductController extends Controller
             }   else {
                 return  response()->json(['content'=>'Please Choose File',"error"=>true],400);
             }
-            $data = $request->only('name','description','information','amount','price','discount','information','category_id','producer_id','status_id')+['photo' => $name];
+            $data = $request->only('name','description','information','amount','price','discount','category_id','producer_id','status_id')+['photo' => $name];
             $product =   $this->_productRepository->create($data);
             $result = array(
                 'status' => 'OK',

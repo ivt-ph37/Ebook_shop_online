@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\UserResource;
 use App\Repositories\User\UserRepositoryInterface;
 use App\User;
+use Dotenv\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -46,23 +47,21 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        dd("sdfdsf");
         $check = '';
         try{
             $data = $request->all();
-
-            $check =   $this->_userRepository->addUser($data) == true ? "OK" : "ER";
+            $user_add =   $this->_userRepository->addUser($data);
             $result = array(
-                'status' => $check,
+                'status' => "OK",
                 'message'=> 'Insert Successfully',
-                'data'=> ''
+                'data'=> $user_add
             );
             return response()->json($result,Response::HTTP_CREATED,[],JSON_NUMERIC_CHECK);
         }catch (Exception $e){
             $result = array(
-                'status' => $check,
+                'status' => "ERR",
                 'message'=> 'Insert Failed',
-                'data'=> ''
+                'data'=> 'ERR'
             );
             return response()->json($result,Response::HTTP_BAD_REQUEST,[],JSON_NUMERIC_CHECK);
         }
@@ -118,18 +117,18 @@ class UserController extends Controller
                 return response()->json("Record is not found",Response::HTTP_NOT_FOUND,[],JSON_NUMERIC_CHECK);
             }
             $data = $request->only('name','phone_number','email','birthday','password','address','address_id','roles');
-            $check =  $this->_userRepository->updateUser($id,$data) == true ? "OK" : "ER";
+            $check =  $this->_userRepository->updateUser($id,$data);
             $result = array(
-                'status' => $check,
+                'status' => 'OK',
                 'message'=> 'Update Successfully',
-                'data'=> $data_find
+                'data'=> $check
             );
             return response()->json($result,Response::HTTP_OK,[],JSON_NUMERIC_CHECK);
         } catch (Exception $e) {
             $result = array(
-                'status' => $check,
+                'status' => 'ER',
                 'message'=> 'Update Failed',
-                'data'=> ''
+                'data'=> 'ERR'
             );
             return response()->json($result,Response::HTTP_BAD_REQUEST,[],JSON_NUMERIC_CHECK);
         }
@@ -149,18 +148,18 @@ class UserController extends Controller
             if (is_null($data_find)){
                 return response()->json("Record is not found",Response::HTTP_NOT_FOUND,[],JSON_NUMERIC_CHECK);
             }
-            $check = $this->_userRepository->deleteUser($id) == true ? "OK" : "ER";
+            $check = $this->_userRepository->deleteUser($id);
             $result = array(
-                'status' => $check,
+                'status' => "OK",
                 'message'=> 'Delete Successfully',
-                'data'=> ''
+                'data'=> $data_find
             );
             return response()->json($result,Response::HTTP_OK,[],JSON_NUMERIC_CHECK);
         } catch (Exception $e) {
             $result = array(
-                'status' => $check,
+                'status' => "ERR",
                 'message'=> 'Delete Failed',
-                'data'=> ''
+                'data'=> 'ERR'
             );
             return response()->json($result,Response::HTTP_BAD_REQUEST,[],JSON_NUMERIC_CHECK);
         }

@@ -6,6 +6,7 @@ use App\Repositories\Review\ReviewRepositoryInterface;
 use App\Review;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 
 class ReviewController extends Controller
 {
@@ -46,8 +47,9 @@ class ReviewController extends Controller
      */
     public function store(Request $request,$user_id)
     {
+        dd($user_id);
 
-
+Auth::id();
         try {
 
             $data = $request->only('content','rating','product_id') + ['user_id' => $user_id];
