@@ -75,13 +75,13 @@ abstract class EloquentRepository implements RepositoryInterface
      */
     public function update($id, array $attributes)
     {
+        $data = null;
         $result = $this->find($id);
         if ($result) {
-            $result->update($attributes);
-            return $result;
+            $data =   $result->update($attributes);
+            return $data;
         }
-
-        return false;
+        return $data;
     }
 
     /**
@@ -92,14 +92,14 @@ abstract class EloquentRepository implements RepositoryInterface
      */
     public function delete($id)
     {
+        $data = null;
         $result = $this->find($id);
         if ($result) {
-            $result->delete();
+            $data = $result->delete();
 
-            return true;
+            return $data;
         }
 
-        return false;
+        return $data;
     }
-
 }

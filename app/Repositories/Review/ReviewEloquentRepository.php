@@ -4,6 +4,7 @@
 namespace App\Repositories\Review;
 
 
+use App\Product;
 use App\Repositories\EloquentRepository;
 
 class ReviewEloquentRepository extends EloquentRepository implements ReviewRepositoryInterface
@@ -17,4 +18,12 @@ class ReviewEloquentRepository extends EloquentRepository implements ReviewRepos
     {
         return \App\Review::class;
     }
+
+
+    public function getProductReview($id)
+    {
+        $product = Product::find($id);
+        return $product->reviews->toArray();
+    }
+
 }

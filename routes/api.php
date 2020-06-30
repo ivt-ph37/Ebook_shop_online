@@ -17,20 +17,35 @@ use Illuminate\Http\Request;
 //    return $request->user();
 //});
 
+Route::get('fillter/products','ProductController@filterProduct');
 
 Route::resource('categories','CategoryController');
+Route::get('getcategories','CategoryController@getAllCategory');
+Route::get('getsubcategories','CategoryController@getSubCategory');
+
+
+
 Route::resource('users','UserController');
 Route::resource('roles','RoleController');
 Route::resource('products','ProductController');
+Route::get('filter/products','ProductController@searchProductByName');
 Route::resource('orders','TransactionController');
 Route::get('categories/{cat}/products', 'ProductController@getProductByCategory');
 Route::resource('reviews','ReviewController');
+Route::Post('users/{user_id}/reviews', 'ReviewController@store');
+Route::get('products/{id}/reviews','ProductController@getProductReview');
+
+
+
+
+
 Route::resource('producers','ProducerController');
 Route::resource('addresses','AddressController');
-
 Route::get('users/{user_id}/orders', 'TransactionController@getOrderByUser');
 Route::resource('orderstatuses','TransactionStatusController');
 
+Route::resource('photoarrays','PhotoArrayController');
+Route::get('reports','ReportController@index');
 
 
 Route::group([

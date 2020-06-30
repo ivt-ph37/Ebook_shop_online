@@ -47,9 +47,6 @@ class ReviewController extends Controller
      */
     public function store(Request $request,$user_id)
     {
-        dd($user_id);
-
-Auth::id();
         try {
 
             $data = $request->only('content','rating','product_id') + ['user_id' => $user_id];
@@ -79,6 +76,8 @@ Auth::id();
      */
     public function show($id)
     {
+
+        $this->_reviewRepository->getProductReview($id);
         $data_find = $this->_reviewRepository->find($id);
 
         if (is_null($data_find)){

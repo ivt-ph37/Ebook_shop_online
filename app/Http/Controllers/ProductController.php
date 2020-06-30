@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Category;
 use App\Product;
 use App\Repositories\Category\CategoryRepositoryInterface;
 use App\Repositories\Product\ProductRepositoryInterface;
@@ -23,11 +24,14 @@ class ProductController extends Controller
         $this->_productRepository = $productRepository;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-            return response()->json($this->_productRepository->getProducts());
+        $paginate = $request->only('limit', 'page');
+        if (count($paginate) > 0) {
+            return response()->json($this->_productRepository->getProducts()->paginate($paginate['limit']));
+        }
+        return response()->json($this->_productRepository->getProducts()->get());
     }
-
     /**
      * Show the form for creating a new resource.
      *
@@ -46,6 +50,8 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+
+
         try{
             if ($request->hasFile('photo')){
                 $file = $request->file('photo');
@@ -181,8 +187,6 @@ class ProductController extends Controller
         if (is_null($data_find)){
             return response()->json("Record id not found",Response::HTTP_NOT_FOUND,[],JSON_NUMERIC_CHECK);
         }
-
-
         $result = array(
             'status' => 'OK',
             'message'=> 'Show Successfully',
@@ -190,4 +194,70 @@ class ProductController extends Controller
         );
         return response()->json($result,Response::HTTP_OK,[],JSON_NUMERIC_CHECK);
     }
+
+    public function getProductReview($id)
+    {
+
+        return response()->json($this->_productRepository->getReviewProduct($id));
+    }
+
+    public function searchProductByName(Request $request){
+        $keyword = $request->get('keyword');
+        return response()->json($this->_productRepository->searchProductByName($keyword),Response::HTTP_OK,[],JSON_NUMERIC_CHECK);
+    }
+
+
+    public function filterProduct(Request $request)
+    {
+
+        $query = $this->_productRepository->query();
+
+        if ($request->has('price')) {
+            if (is_null($request->get('price')) == false) {
+                $price = explode(",", $request->get('price'));
+                if (count($price) != 0) {
+                    $query->where('price', '>=', $price[0])->where('price', '<=', $price[1]);
+                }
+            }
+        }
+
+        if ($request->has('category')) {
+            if (is_null($request->get('category')) == false) {
+                $id = $request->get('category');
+                $query->where('categories.id', $id)->orWhere('categories.parrent_id', $id);
+            }
+        }
+
+        if ($request->has('producer')) {
+            if (is_null($request->get('producer')) == false) {
+                $query->where('producers.id', $request->get('producer'));
+            }
+        }
+
+        if ($request->has('keyword')) {
+            if (is_null($request->get('keyword')) == false) {
+                $query->where('p.name', 'LIKE', '%' . $request->get('keyword') . '%');
+            }
+        }
+
+
+
+        if ($request->has('sort')) {
+
+            if (is_null($request->get('sort')) == false) {
+                $query->orderBy('price',$request->get('sort'));
+            }
+        }
+
+        if ($request->has('limit') && $request->has('page')) {
+            $paginate = $request->only('limit', 'page');
+            if (count($paginate) > 0) {
+                return response()->json($query->groupBy('p.id')->paginate($paginate['limit']));
+            }
+        }
+        return response()->json($query->groupBy('p.id')->get());
+
+    }
+
+
 }

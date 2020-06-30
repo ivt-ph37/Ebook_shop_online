@@ -17,9 +17,12 @@ class CreateTransactionsTable extends Migration
             $table->bigIncrements('id');
             $table->string("full_name")->nullable();
 
+            $table->string("phone_number")->nullable();
+
             $table->bigInteger("user_id")->unsigned()->nullable();
             $table->foreign("user_id")->references("id")->on("users")->onDelete("cascade");
             $table->longText("street")->nullable();
+
             $table->bigInteger("address_id")->unsigned();//
             $table->foreign("address_id")->references("id")->on("addresses")->onDelete("cascade");
 

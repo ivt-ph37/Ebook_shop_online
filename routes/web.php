@@ -12,9 +12,12 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('dinhlongit');
 });
 
 
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('laravel-send-email', 'EmailController@sendEMail')->name("send-mail");
+
+

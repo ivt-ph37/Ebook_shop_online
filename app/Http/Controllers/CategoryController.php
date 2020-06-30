@@ -160,4 +160,29 @@ class CategoryController extends Controller
         }
     }
 
+
+    public function getAllCategory(Request $request)
+    {
+        $paginate = $request->only('limit', 'page');
+        if (count($paginate) > 0) {
+            return response()->json($this->_categoryRepository->getAllCategory()->paginate($paginate['limit']));
+        }
+        return response()->json($this->_categoryRepository->getAllCategory()->get());
+
+    }
+
+    public function getSubCategory()
+    {
+        $data = $this->_categoryRepository->getSubCategories();
+        $result = array(
+            'status' => 'OK',
+            'message' => 'Fetch Successfully',
+            'data' => $data
+        );
+        return response()->json($data, Response::HTTP_OK, [], JSON_NUMERIC_CHECK);
+    }
+
+
+
+
 }

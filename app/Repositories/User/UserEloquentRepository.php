@@ -3,15 +3,14 @@
 
 namespace App\Repositories\User;
 
-
+use http\Env\Request;
+use Illuminate\Support\Facades\DB;
 use App\Repositories\EloquentRepository;
 use App\User;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class UserEloquentRepository extends EloquentRepository implements UserRepositoryInterface
 {
-
     /**
      * get model
      * @return string
@@ -57,7 +56,7 @@ class UserEloquentRepository extends EloquentRepository implements UserRepositor
             ]);
             $userCreate->roles()->attach($data['roles']);
             DB::commit();
-            $check = true;
+            $check =  $userCreate->toArray()+['role' => $userCreate->roles()->pluck("name")->toArray()[0]];
         }catch (Exception $ex){
             DB::rollback();
             return $check;
@@ -82,7 +81,7 @@ class UserEloquentRepository extends EloquentRepository implements UserRepositor
             $userCreate = User::find($id);
             $userCreate->roles()->attach($data['roles']);
             DB::commit();
-            $check = true;
+            $check =  $userCreate->toArray()+['role' => $userCreate->roles()->pluck("name")->toArray()[0]];
         }catch (Exception $ex){
             DB::rollback();
             return $check;
