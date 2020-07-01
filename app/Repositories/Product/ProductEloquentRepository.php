@@ -2,6 +2,7 @@
 
 
 namespace App\Repositories\Product;
+use App\Product;
 use DB;
 
 use App\Category;
@@ -26,6 +27,12 @@ class ProductEloquentRepository extends EloquentRepository implements ProductRep
             ->leftJoin('producers','producers.id','=','p.producer_id')
             ->leftJoin('product_statuses','p.status_id','=','product_statuses.id')
             ->select('p.*','categories.name as category','producers.name as producer', 'product_statuses.name as status');
+    }
+
+    public function getPhotosOfProduct($id)
+    {
+        $product = Product::find($id);
+        return $product->photos()->pluck('photo');
     }
 
     public function getProductByCategory($id)

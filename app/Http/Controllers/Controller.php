@@ -8,6 +8,16 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
+/**
+ * @OA\Info(title="IVIETTECH", version="0.1")
+ */
+
+
+
+
+
+
+
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
@@ -17,14 +27,7 @@ class Controller extends BaseController
       //  $this->middleware('cors');
     }
 
-    public function validate($request)
-    {
-        $validator = Validator::make($request->all(), [], []);
-        if ($validator->fails())
-        {
-            return \response()->json($validator->errors());
-        }
-    }
+
 
 }
 

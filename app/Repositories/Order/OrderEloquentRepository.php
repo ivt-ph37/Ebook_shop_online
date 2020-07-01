@@ -32,8 +32,7 @@ class OrderEloquentRepository extends EloquentRepository implements OrderReposit
                 't.street','addresses.name as city','users.phone_number','users.name',
                 DB::raw('SUM(transaction_products.price * transaction_products.amount) as total')
                 , 'transaction_statuses.name as status')
-            ->groupBy('t.id')
-            ->get();
+            ->groupBy('t.id');
     }
 
     public function submitOrder($cart,$transaction_info){

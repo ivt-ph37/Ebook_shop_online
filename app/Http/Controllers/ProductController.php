@@ -182,6 +182,11 @@ class ProductController extends Controller
         }
     }
 
+    public function getPhotosOfProduct($id)
+    {
+        return response()->json($this->_productRepository->getPhotosOfProduct($id), 200);
+    }
+
     public function getProductByCategory(Request $request,$cat){
         $data_find = $this->_categoryRepository->find($cat);
         if (is_null($data_find)){

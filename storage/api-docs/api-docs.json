@@ -1,0 +1,1822 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "IVIETTECH",
+        "version": "0.1"
+    },
+    "paths": {
+        "/api/auth/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Logs user into the system",
+                "description": "",
+                "operationId": "login",
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "The user name for login",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "password",
+                        "in": "query",
+                        "description": "The password for login in clear text",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "headers": {
+                            "X-Rate-Limit": {
+                                "description": "calls per hour allowed by the user",
+                                "schema": {
+                                    "type": "integer",
+                                    "format": "int32"
+                                }
+                            },
+                            "X-Expires-After": {
+                                "description": "date in UTC when token expires",
+                                "schema": {
+                                    "type": "string",
+                                    "format": "date-time"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid username/password supplied"
+                    }
+                }
+            }
+        },
+        "/api/auth/me": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Get info user by Bearer token",
+                "operationId": "me",
+                "responses": {
+                    "200": {
+                        "description": "Success with some route data"
+                    },
+                    "400": {
+                        "description": "Invalid username/password supplied"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/api/auth/update/{id}": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Update User",
+                "description": "",
+                "operationId": "updateuser",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "id": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object",
+                                "example": {
+                                    "name": "dinhlong",
+                                    "phone_number": "0888999043",
+                                    "email": "dinhlongit1998@gmail.com",
+                                    "address": "Phu Da"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "400": {
+                        "description": "Invalid Order"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/api/auth/logout": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Logs out current logged in user session",
+                "description": "",
+                "operationId": "logout",
+                "parameters": [],
+                "responses": {
+                    "default": {
+                        "description": "successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/api/auth/register": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Register user",
+                "description": "",
+                "operationId": "register",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "email",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "password",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "phone_number",
+                        "in": "query",
+                        "description": "phone_number",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "address",
+                        "in": "query",
+                        "description": "address",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "address_id",
+                        "in": "query",
+                        "description": "address_id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "headers": {
+                            "X-Rate-Limit": {
+                                "description": "calls per hour allowed by the user",
+                                "schema": {
+                                    "type": "integer",
+                                    "format": "int32"
+                                }
+                            },
+                            "X-Expires-After": {
+                                "description": "date in UTC when token expires",
+                                "schema": {
+                                    "type": "string",
+                                    "format": "date-time"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid username/password supplied"
+                    }
+                }
+            }
+        },
+        "/api/auth/refresh": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Refresh token",
+                "operationId": "refresh",
+                "responses": {
+                    "200": {
+                        "description": "Success with some route data"
+                    },
+                    "400": {
+                        "description": "Invalid username/password supplied"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/api/categories": {
+            "get": {
+                "tags": [
+                    "Category"
+                ],
+                "summary": "Get all categories ",
+                "operationId": "someRoute",
+                "responses": {
+                    "200": {
+                        "description": "Success with some route data"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Category"
+                ],
+                "summary": "Add category",
+                "description": "",
+                "operationId": "store",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "photo",
+                        "in": "query",
+                        "description": "photo",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "parrent_id",
+                        "in": "query",
+                        "description": "parrent_id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "headers": {
+                            "X-Rate-Limit": {
+                                "description": "calls per hour allowed by the user",
+                                "schema": {
+                                    "type": "integer",
+                                    "format": "int32"
+                                }
+                            },
+                            "X-Expires-After": {
+                                "description": "date in UTC when token expires",
+                                "schema": {
+                                    "type": "string",
+                                    "format": "date-time"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid "
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/api/getcategories": {
+            "get": {
+                "tags": [
+                    "Category"
+                ],
+                "summary": "Get whole categories  ",
+                "operationId": "getAllCategories",
+                "responses": {
+                    "200": {
+                        "description": "Success with some route data"
+                    }
+                }
+            }
+        },
+        "/api/getsubcategories": {
+            "get": {
+                "tags": [
+                    "Category"
+                ],
+                "summary": "Get getsubcategories  ",
+                "operationId": "getSubCategory",
+                "responses": {
+                    "200": {
+                        "description": "Success with some route data"
+                    }
+                }
+            }
+        },
+        "/api/categories/{id}": {
+            "get": {
+                "tags": [
+                    "Category"
+                ],
+                "summary": "Get Category by id",
+                "description": "",
+                "operationId": "show",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "400": {
+                        "description": "Invalid id supplied"
+                    },
+                    "404": {
+                        "description": "category not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Category"
+                ],
+                "summary": "Update Category by id",
+                "description": "",
+                "operationId": "update",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "photo",
+                        "in": "query",
+                        "description": "parrent_id",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "parrent_id",
+                        "in": "query",
+                        "description": "parrent_id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "400": {
+                        "description": "Invalid id supplied"
+                    },
+                    "404": {
+                        "description": "category not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Category"
+                ],
+                "summary": "Delete Category by id",
+                "description": "",
+                "operationId": "destroy",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "400": {
+                        "description": "Invalid id supplied"
+                    },
+                    "404": {
+                        "description": "category not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/api/products/{id}/photos": {
+            "get": {
+                "tags": [
+                    "Product"
+                ],
+                "summary": "Get all photos of product",
+                "operationId": "getPhotosOfProduct",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success with some route data"
+                    }
+                }
+            }
+        },
+        "/api/fillter/products?category={category}&producer={producer}&price={minmax}&keyword={keyword}&limit={limit}&page={page}": {
+            "get": {
+                "tags": [
+                    "Product"
+                ],
+                "summary": "Filter Product",
+                "description": "",
+                "operationId": "FilterProduct",
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "400": {
+                        "description": "Invalid id supplied"
+                    },
+                    "404": {
+                        "description": "category not found"
+                    }
+                }
+            }
+        },
+        "/api/products?limit={limit}&page={page}": {
+            "get": {
+                "tags": [
+                    "Product"
+                ],
+                "summary": "Get products paginate",
+                "operationId": "indnex",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success with some route data"
+                    }
+                }
+            }
+        },
+        "/api/products/{id}": {
+            "get": {
+                "tags": [
+                    "Product"
+                ],
+                "summary": "Get Products by id",
+                "description": "",
+                "operationId": "show",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "400": {
+                        "description": "Invalid id supplied"
+                    },
+                    "404": {
+                        "description": "category not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Product"
+                ],
+                "summary": "EDIT a product",
+                "description": "",
+                "operationId": "update",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "photo": {
+                                        "description": "file",
+                                        "type": "file",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
+                                    },
+                                    "name": {
+                                        "description": "name",
+                                        "type": "string",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
+                                    },
+                                    "description": {
+                                        "description": "description",
+                                        "type": "string",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
+                                    },
+                                    "information": {
+                                        "description": "information",
+                                        "type": "string",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
+                                    },
+                                    "amount": {
+                                        "description": "amount",
+                                        "type": "string",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
+                                    },
+                                    "price": {
+                                        "description": "price",
+                                        "type": "string",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
+                                    },
+                                    "discount": {
+                                        "description": "discount",
+                                        "type": "string",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
+                                    },
+                                    "category_id": {
+                                        "description": "category_id",
+                                        "type": "string",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
+                                    },
+                                    "producer_id": {
+                                        "description": "producer_id",
+                                        "type": "string",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
+                                    },
+                                    "status_id": {
+                                        "description": "status_id",
+                                        "type": "string",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "404": {
+                        "description": "Resource Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Product"
+                ],
+                "summary": "Delete product by id",
+                "description": "",
+                "operationId": "destroy",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "400": {
+                        "description": "Invalid id supplied"
+                    },
+                    "404": {
+                        "description": "Role not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/api/products": {
+            "post": {
+                "tags": [
+                    "Product"
+                ],
+                "summary": "ADD a product",
+                "description": "",
+                "operationId": "store",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "photo": {
+                                        "description": "file",
+                                        "type": "file",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
+                                    },
+                                    "name": {
+                                        "description": "name",
+                                        "type": "string",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
+                                    },
+                                    "description": {
+                                        "description": "description",
+                                        "type": "string",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
+                                    },
+                                    "information": {
+                                        "description": "information",
+                                        "type": "string",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
+                                    },
+                                    "amount": {
+                                        "description": "amount",
+                                        "type": "string",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
+                                    },
+                                    "price": {
+                                        "description": "price",
+                                        "type": "string",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
+                                    },
+                                    "discount": {
+                                        "description": "discount",
+                                        "type": "string",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
+                                    },
+                                    "category_id": {
+                                        "description": "category_id",
+                                        "type": "string",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
+                                    },
+                                    "producer_id": {
+                                        "description": "producer_id",
+                                        "type": "string",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
+                                    },
+                                    "status_id": {
+                                        "description": "status_id",
+                                        "type": "string",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "404": {
+                        "description": "Resource Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/api/orders": {
+            "get": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Get all orders",
+                "operationId": "index",
+                "responses": {
+                    "200": {
+                        "description": "Success with some route data"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Place an order",
+                "description": "",
+                "operationId": "placeOrder",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "id": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object",
+                                "example": {
+                                    "cart": [
+                                        {
+                                            "product_id": 1,
+                                            "amount": 3,
+                                            "price": 4
+                                        },
+                                        {
+                                            "product_id": 2,
+                                            "amount": 44,
+                                            "price": 4
+                                        }
+                                    ],
+                                    "transaction_info": {
+                                        "user_id": 1,
+                                        "full_name": "dinh long",
+                                        "street": "27 Thai Thi Boi",
+                                        "phone_number": 888888888,
+                                        "address_id": 1
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "400": {
+                        "description": "Invalid Order"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/api/orders/{id}": {
+            "put": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Update Status order by id",
+                "description": "",
+                "operationId": "update",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "status_id",
+                        "in": "query",
+                        "description": "name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "400": {
+                        "description": "Invalid id supplied"
+                    },
+                    "404": {
+                        "description": "category not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/api/users/{id}/orders": {
+            "get": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Get Order of user",
+                "description": "",
+                "operationId": "getOrderByUser",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "400": {
+                        "description": "Invalid id supplied"
+                    },
+                    "404": {
+                        "description": "category not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/api/roles": {
+            "get": {
+                "tags": [
+                    "Role"
+                ],
+                "summary": "Get all role ",
+                "operationId": "someRoute",
+                "responses": {
+                    "200": {
+                        "description": "Success with some route data"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Role"
+                ],
+                "summary": "Add Role",
+                "description": "Add new Eole",
+                "operationId": "store",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "400": {
+                        "description": "Invalid "
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/api/roles/{id}": {
+            "get": {
+                "tags": [
+                    "Role"
+                ],
+                "summary": "Get Role by id",
+                "description": "",
+                "operationId": "show",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "400": {
+                        "description": "Invalid id supplied"
+                    },
+                    "404": {
+                        "description": "category not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Role"
+                ],
+                "summary": "Edit Role",
+                "description": "Edit new Eole",
+                "operationId": "update",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "400": {
+                        "description": "Invalid "
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Role"
+                ],
+                "summary": "Delete Role by id",
+                "description": "",
+                "operationId": "destroy",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "400": {
+                        "description": "Invalid id supplied"
+                    },
+                    "404": {
+                        "description": "Role not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/api/producers": {
+            "get": {
+                "tags": [
+                    "Producer"
+                ],
+                "summary": "Get all producer ",
+                "operationId": "someRoute",
+                "responses": {
+                    "200": {
+                        "description": "Success with some route data"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Producer"
+                ],
+                "summary": "Add Producer",
+                "description": "Add new Producer",
+                "operationId": "store",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "400": {
+                        "description": "Invalid "
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/api/producers/{id}": {
+            "get": {
+                "tags": [
+                    "Producer"
+                ],
+                "summary": "Get producer by id",
+                "description": "",
+                "operationId": "show",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "400": {
+                        "description": "Invalid id supplied"
+                    },
+                    "404": {
+                        "description": "category not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Producer"
+                ],
+                "summary": "Edit Producer",
+                "description": "Edit Producer",
+                "operationId": "update",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "400": {
+                        "description": "Invalid "
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Producer"
+                ],
+                "summary": "Delete producer by id",
+                "description": "",
+                "operationId": "destroy",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "400": {
+                        "description": "Invalid id supplied"
+                    },
+                    "404": {
+                        "description": "Role not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/api/users": {
+            "get": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Get all user ",
+                "operationId": "someRoute",
+                "responses": {
+                    "200": {
+                        "description": "Success with some route data"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Add new User",
+                "description": "",
+                "operationId": "placeOrder",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "id": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object",
+                                "example": {
+                                    "name": "dinhlong",
+                                    "phone_number": "0888999043",
+                                    "email": "dinhlongit1998@gmail.com",
+                                    "birthday": "2012-02-02",
+                                    "password": "123456",
+                                    "address": "Phu Da",
+                                    "address_id": "1",
+                                    "roles": 1
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "400": {
+                        "description": "Invalid Order"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/api/users/{id}": {
+            "get": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Get user by id",
+                "description": "",
+                "operationId": "show",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "400": {
+                        "description": "Invalid id supplied"
+                    },
+                    "404": {
+                        "description": "category not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Edit User",
+                "description": "",
+                "operationId": "placeOrder",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "id": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object",
+                                "example": {
+                                    "name": "dinhlong",
+                                    "phone_number": "0888999043",
+                                    "email": "dinhlongit1998@gmail.com",
+                                    "birthday": "2012-02-02",
+                                    "password": "123456",
+                                    "address": "Phu Da",
+                                    "address_id": "1",
+                                    "roles": 1
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "400": {
+                        "description": "Invalid Order"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Delete user by id",
+                "description": "",
+                "operationId": "destroy",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "400": {
+                        "description": "Invalid id supplied"
+                    },
+                    "404": {
+                        "description": "Role not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/api/reviews": {
+            "get": {
+                "tags": [
+                    "Review"
+                ],
+                "summary": "Get all reviews ",
+                "operationId": "someRoute",
+                "responses": {
+                    "200": {
+                        "description": "Success with some route data"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/api/reviews/{id}": {
+            "get": {
+                "tags": [
+                    "Review"
+                ],
+                "summary": "Get reviews by id",
+                "description": "",
+                "operationId": "show",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "400": {
+                        "description": "Invalid id supplied"
+                    },
+                    "404": {
+                        "description": "category not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Review"
+                ],
+                "summary": "Edit reviews",
+                "description": "Edit reviews",
+                "operationId": "update",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "content",
+                        "in": "query",
+                        "description": "content",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "400": {
+                        "description": "Invalid "
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Review"
+                ],
+                "summary": "Delete reviews by id",
+                "description": "",
+                "operationId": "destroy",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "400": {
+                        "description": "Invalid id supplied"
+                    },
+                    "404": {
+                        "description": "Role not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/api/users/{user_id}/reviews": {
+            "post": {
+                "tags": [
+                    "Review"
+                ],
+                "summary": "Add reviews",
+                "description": "Add new reviews",
+                "operationId": "store",
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "path",
+                        "description": "user_id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "content",
+                        "in": "query",
+                        "description": "content",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "rating",
+                        "in": "query",
+                        "description": "rating",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "product_id",
+                        "in": "query",
+                        "description": "product_id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "400": {
+                        "description": "Invalid "
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/api/addresses": {
+            "get": {
+                "tags": [
+                    "Address"
+                ],
+                "summary": "Get all city ",
+                "operationId": "index",
+                "responses": {
+                    "200": {
+                        "description": "Success with some route data"
+                    }
+                }
+            }
+        },
+        "/api/orderstatuses": {
+            "get": {
+                "tags": [
+                    "Order_Status"
+                ],
+                "summary": "Get all Order_Status ",
+                "operationId": "index",
+                "responses": {
+                    "200": {
+                        "description": "Success with some route data"
+                    }
+                }
+            }
+        },
+        "/api/productstatuses": {
+            "get": {
+                "tags": [
+                    "Product_Status"
+                ],
+                "summary": "Get all Product_Status ",
+                "operationId": "index",
+                "responses": {
+                    "200": {
+                        "description": "Success with some route data"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Orders": {
+                "properties": {
+                    "product_id": {
+                        "type": "integer"
+                    },
+                    "amount": {
+                        "type": "integer"
+                    },
+                    "price": {
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "Transactions": {
+                "properties": {
+                    "full_name": {
+                        "type": "json"
+                    },
+                    "user_id": {
+                        "type": "integer"
+                    },
+                    "street": {
+                        "type": "string"
+                    },
+                    "address_id": {
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            }
+        }
+    }
+}

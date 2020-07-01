@@ -45,8 +45,9 @@ Route::get('users/{user_id}/orders', 'TransactionController@getOrderByUser');
 Route::resource('orderstatuses','TransactionStatusController');
 
 Route::resource('photoarrays','PhotoArrayController');
+Route::get('products/{id}/photos','ProductController@getPhotosOfProduct');
 Route::get('reports','ReportController@index');
-
+Route::resource('productstatuses','ProductStatusController');
 
 Route::group([
     'middleware' => ['api'],
