@@ -5,6 +5,7 @@ use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
@@ -18,7 +19,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login','register','logout','me','refresh']]);
+    //    $this->middleware('auth:api', ['except' => ['login','register','logout','me','refresh']]);
     }
 
     /**
@@ -38,6 +39,67 @@ class AuthController extends Controller
         }
 
         return response()->json(['error' => 'Unauthorized'], 401);
+    }
+
+    public function updateUser(Request $request,$id){
+
+        $data = $request->all();
+        $check = false;
+        try{
+            DB::beginTransaction();
+            $user = User::find($id);
+            if ($request->has('name')){
+                if (is_null($request->get('name')) != true ){
+                    $user->name = $request->get('name');
+                }
+            }
+            if ($request->has('phone_number')){
+                if (is_null($request->get('phone_number')) != true ){
+                    $user->phone_number = $request->get('phone_number');
+                }
+            }
+
+            if ($request->has('birthday')){
+                if (is_null($request->get('birthday')) != true ){
+                    $user->birthday = $request->get('birthday');
+                }
+            }
+
+            if ($request->has('email')){
+                if (is_null($request->get('email')) != true ){
+                    $user->email = $request->get('email');
+                }
+            }
+            if ($request->has('address')){
+                if (is_null($request->get('address')) != true ){
+                    $user->address = $request->get('address');
+                }
+            }
+
+
+            if ($request->has('password')){
+                if (is_null($request->get('password')) != true ){
+                    $user->password = Hash::make($request->get('password'));
+                }
+            }
+
+            if ($request->has('address_id')){
+                if (is_null($request->get('address_id')) != true ){
+                    $user->address_id = $request->get('address_id');
+                }
+            }
+            $user->save();
+
+            DB::table('user_roles')->where('user_id', $id)->delete();
+            $userCreate = User::find($id);
+            $userCreate->roles()->attach([3]);
+            DB::commit();
+            $check =  $userCreate->toArray()+['role' => $userCreate->roles()->pluck("name")->toArray()[0]];
+        }catch (Exception $ex){
+            DB::rollback();
+            return response()->json($check);
+        }
+        return response()->json($check);
     }
 
     /**

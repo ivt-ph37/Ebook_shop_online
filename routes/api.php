@@ -59,5 +59,6 @@ Route::group([
     Route::post('logout', 'Auth\AuthController@logout');
     Route::post('refresh', 'Auth\AuthController@refresh');
     Route::post('me', 'Auth\AuthController@me');
+    Route::post('update/{id}', 'Auth\AuthController@updateUser');
 
 });
