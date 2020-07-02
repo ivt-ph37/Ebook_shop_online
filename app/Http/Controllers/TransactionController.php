@@ -25,6 +25,7 @@ class TransactionController extends Controller
     private $_orderRepository;
     public function __construct(OrderRepositoryInterface $orderRepository)
     {
+        $this->middleware('auth.role:Admin,Nhân Viên',['except' => ['store','getOrderByUser','destroy']]);
         $this->_orderRepository = $orderRepository;
     }
 

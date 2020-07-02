@@ -17,9 +17,13 @@ class ProductController extends Controller
      * @return \Illuminate\Http\Response
      */
     private $_productRepository;
+
+
     private $_categoryRepository;
     public function __construct(ProductRepositoryInterface $productRepository, CategoryRepositoryInterface $categoryRepository)
     {
+        $this->middleware('auth.role:Admin', ['except' => ['index', 'show', 'filterProduct', 'getPhotosOfProduct', 'getProductReview', 'getProductByCategory']]);
+
         $this->_categoryRepository = $categoryRepository;
         $this->_productRepository = $productRepository;
     }
@@ -210,7 +214,6 @@ class ProductController extends Controller
         $keyword = $request->get('keyword');
         return response()->json($this->_productRepository->searchProductByName($keyword),Response::HTTP_OK,[],JSON_NUMERIC_CHECK);
     }
-
 
     public function filterProduct(Request $request)
     {

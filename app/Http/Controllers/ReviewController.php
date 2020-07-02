@@ -7,6 +7,7 @@ use App\Review;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class ReviewController extends Controller
 {
@@ -18,6 +19,7 @@ class ReviewController extends Controller
     private $_reviewRepository;
     public function __construct(ReviewRepositoryInterface $reviewRepository)
     {
+        $this->middleware('auth.role:Admin', ['except' => ['store']]);
         $this->_reviewRepository = $reviewRepository;
     }
 
@@ -47,6 +49,15 @@ class ReviewController extends Controller
      */
     public function store(Request $request,$user_id)
     {
+        $validator = Validator::make($request->all(), [
+            'content' => 'required|max:255',
+            'rating' => 'required|numeric|min:1|max:5',
+            'product_id' => 'required|numeric',
+        ]);
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toArray(), Response::HTTP_BAD_REQUEST, [], JSON_NUMERIC_CHECK);
+        }
+
         try {
 
             $data = $request->only('content','rating','product_id') + ['user_id' => $user_id];
@@ -111,6 +122,15 @@ class ReviewController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $validator = Validator::make($request->all(), [
+            'content' => 'required|max:255',
+            'rating' => 'required|numeric|min:1|max:5',
+            'product_id' => 'required|numeric',
+        ]);
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toArray(), Response::HTTP_BAD_REQUEST, [], JSON_NUMERIC_CHECK);
+        }
+
         try {
             $data_find = $this->_reviewRepository->find($id);
             if (is_null($data_find)){

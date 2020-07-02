@@ -9,6 +9,7 @@ use App\Repositories\Category\CategoryRepositoryInterface;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Validator;
 
 class CategoryController extends Controller
 {
@@ -53,6 +54,14 @@ class CategoryController extends Controller
      */
     public function store(CreateCategoryRequest $request)
     {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|max:255',
+            'parrent_id' => 'required|numeric',
+        ]);
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toArray(), Response::HTTP_BAD_REQUEST, [], JSON_NUMERIC_CHECK);
+        }
+
         try{
             $data = $request->only('name','photo','parrent_id');
             $this->_categoryRepository->create($data);
@@ -112,6 +121,14 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|max:255',
+            'parrent_id' => 'required|numeric',
+        ]);
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toArray(), Response::HTTP_BAD_REQUEST, [], JSON_NUMERIC_CHECK);
+        }
+
         try {
             $data_find = $this->_categoryRepository->find($id);
             if (is_null($data_find)){
