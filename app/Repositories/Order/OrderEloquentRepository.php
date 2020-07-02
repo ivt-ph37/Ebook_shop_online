@@ -101,4 +101,9 @@ class OrderEloquentRepository extends EloquentRepository implements OrderReposit
             ->having('t.id',$id)
             ->get();
     }
+
+    public function getProductOfOrder($id){
+        $order = Transaction::find($id);
+        return $order->products;
+    }
 }

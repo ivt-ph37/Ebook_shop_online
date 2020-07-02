@@ -16,6 +16,7 @@ class CategoryController extends Controller
 
     public function __construct(CategoryRepositoryInterface $categoryRepository)
     {
+        $this->middleware('auth.role:Admin', ['except' => ['index', 'show', 'getAllCategory', 'getSubCategory']]);
         $this->_categoryRepository = $categoryRepository;
     }
     /**

@@ -2,8 +2,10 @@
 
 namespace App\Http\Middleware;
 
+use App\User;
 use Closure;
-
+use Exception;
+use JWTAuth;
 class RoleAuthorize
 {
     /**

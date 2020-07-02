@@ -105,9 +105,10 @@ class TransactionController extends Controller
      * @param  \App\Transaction  $transaction
      * @return \Illuminate\Http\Response
      */
-    public function show(Transaction $transaction)
+    public function show($id)
     {
-        //
+        return response()->json($this->_orderRepository->getProductOfOrder($id), Response::HTTP_OK, [], JSON_NUMERIC_CHECK);
+
     }
 
     /**
