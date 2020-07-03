@@ -26,7 +26,12 @@ class ProductEloquentRepository extends EloquentRepository implements ProductRep
             ->leftJoin('categories','p.category_id','=','categories.id')
             ->leftJoin('producers','producers.id','=','p.producer_id')
             ->leftJoin('product_statuses','p.status_id','=','product_statuses.id')
-            ->select('p.*','categories.name as category','producers.name as producer', 'product_statuses.name as status');
+            ->select('p.*','categories.name as category','producers.name as producer', 'product_statuses.name as status',
+                DB::raw('p.amount
+            - (SELECT IFNULL(SUM(transaction_products.amount),0) FROM transaction_products 
+            INNER JOIN transactions ON transaction_products.transaction_id = transactions.id
+            INNER JOIN transaction_statuses ON transaction_statuses.id = transactions.status_id
+            WHERE transaction_products.product_id = p.id AND transaction_statuses.id <> 5) AS amount'));
     }
 
     public function getPhotosOfProduct($id)
@@ -50,8 +55,12 @@ class ProductEloquentRepository extends EloquentRepository implements ProductRep
             ->select('p.*','categories.name as category',
                 'producers.name as producer',
                 DB::raw('AVG(reviews.rating) as rating'),
-                  DB::raw('COUNT(reviews.rating) as amount_rating')
-                )
+                  DB::raw('COUNT(reviews.rating) as amount_rating'),
+                DB::raw('p.amount
+            - (SELECT IFNULL(SUM(transaction_products.amount),0) FROM transaction_products 
+            INNER JOIN transactions ON transaction_products.transaction_id = transactions.id
+            INNER JOIN transaction_statuses ON transaction_statuses.id = transactions.status_id
+            WHERE transaction_products.product_id = p.id AND transaction_statuses.id <> 5) AS amount'))
             ->where('p.id',$id)
             ->groupBy('p.id')
             ->get();
@@ -83,7 +92,12 @@ class ProductEloquentRepository extends EloquentRepository implements ProductRep
             ->leftJoin('categories','p.category_id','=','categories.id')
             ->leftJoin('producers','producers.id','=','p.producer_id')
             ->leftJoin('product_statuses','p.status_id','=','product_statuses.id')
-            ->select('p.*','categories.name as category','producers.name as producer', 'product_statuses.name as status');
+            ->select('p.*','categories.name as category','producers.name as producer', 'product_statuses.name as status',
+             DB::raw('p.amount
+            - (SELECT IFNULL(SUM(transaction_products.amount),0) FROM transaction_products 
+            INNER JOIN transactions ON transaction_products.transaction_id = transactions.id
+            INNER JOIN transaction_statuses ON transaction_statuses.id = transactions.status_id
+            WHERE transaction_products.product_id = p.id AND transaction_statuses.id <> 5) AS amount'));
     }
 
 

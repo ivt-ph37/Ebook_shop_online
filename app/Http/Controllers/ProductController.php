@@ -8,6 +8,7 @@ use App\Repositories\Category\CategoryRepositoryInterface;
 use App\Repositories\Product\ProductRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
@@ -22,7 +23,7 @@ class ProductController extends Controller
     private $_categoryRepository;
     public function __construct(ProductRepositoryInterface $productRepository, CategoryRepositoryInterface $categoryRepository)
     {
-        $this->middleware('auth.role:Admin', ['except' => ['index', 'show', 'filterProduct', 'getPhotosOfProduct', 'getProductReview', 'getProductByCategory']]);
+   //     $this->middleware('auth.role:Admin', ['except' => ['index', 'show', 'filterProduct', 'getPhotosOfProduct', 'getProductReview', 'getProductByCategory']]);
 
         $this->_categoryRepository = $categoryRepository;
         $this->_productRepository = $productRepository;
@@ -54,6 +55,22 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+
+        $validator = Validator::make($request->all(), [
+            'photo' => 'required',
+            'name' => 'required',
+            'description' => 'required',
+            'information' => 'required',
+            'discount' => 'required|numeric|min:0|max:99',
+            'amount' => 'required|numeric',
+            'price' => 'required|numeric',
+            'category_id' => 'required|numeric',
+            'producer_id' => 'required|numeric',
+            'status_id' => 'required|numeric',
+        ]);
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toArray(), Response::HTTP_BAD_REQUEST, [], JSON_NUMERIC_CHECK);
+        }
 
 
         try{
@@ -220,14 +237,7 @@ class ProductController extends Controller
 
         $query = $this->_productRepository->query();
 
-        if ($request->has('price')) {
-            if (is_null($request->get('price')) == false) {
-                $price = explode(",", $request->get('price'));
-                if (count($price) != 0) {
-                    $query->where('price', '>=', $price[0])->where('price', '<=', $price[1]);
-                }
-            }
-        }
+
 
         if ($request->has('category')) {
             if (is_null($request->get('category')) == false) {
@@ -248,10 +258,18 @@ class ProductController extends Controller
             }
         }
 
+        if ($request->has('price')) {
+            if (is_null($request->get('price')) == false) {
+                $price = explode(",", $request->get('price'));
+                if (count($price) != 0) {
+                    $query->where('price', '>=', $price[0])->where('price', '<=', $price[1]);
+                }
+            }
+        }
+
 
 
         if ($request->has('sort')) {
-
             if (is_null($request->get('sort')) == false) {
                 $query->orderBy('price',$request->get('sort'));
             }
@@ -263,6 +281,9 @@ class ProductController extends Controller
                 return response()->json($query->groupBy('p.id')->paginate($paginate['limit']));
             }
         }
+
+
+
         return response()->json($query->groupBy('p.id')->get());
 
     }
